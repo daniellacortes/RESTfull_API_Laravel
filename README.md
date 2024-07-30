@@ -1,2 +1,4 @@
-# RESTfull_API_Laravel
-Seguindo um tutorial para criar uma RESTfull API usando Laravel.
+# RESTfull API Laravel
+
+Aprendendo a construir uma RESTfull API usando Laravel e seguindo tutorial descrito no site [Topal Developers](https://www.toptal.com/laravel/restful-laravel-api-tutorial).
+ 
