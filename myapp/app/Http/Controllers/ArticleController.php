@@ -31,7 +31,7 @@ class ArticleController extends Controller
         if (Article::find($id)){
             return Article::find($id);
         } else{
-            return response()->json('Não encontrado.', 404);
+            return response()->json(['message'=>'Artigo não encontrado.'], 404);
         }
     }
 
