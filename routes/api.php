@@ -11,8 +11,3 @@ Route::post('/articles', [ArticleController::class, 'store']);
 Route::put('/articles/{id}', [ArticleController::class, 'update']);
 Route::delete('/articles/{id}', [ArticleController::class, 'destroy']);
 
-// Route::get('articles', 'ArticleController@index');
-// Route::get('articles/{id}', 'ArticleController@show');
-// Route::post('articles', 'ArticleController@store');
-// Route::put('articles/{id}', 'ArticleController@update');
-// Route::delete('articles/{id}', 'ArticleController@delete');
