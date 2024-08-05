@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+
+use function Psy\debug;
 
 class UserController extends Controller
 {
@@ -29,10 +32,10 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        if (User::find($id)){
-            return User::find($id);
-        } else{
-            return response()->json(['message'=>'Usuário não encontrado.'], 404);
+        try {
+            return User::findOrFail($id);
+        } catch (ModelNotFoundException $modelException) {
+            return response()->json(["error"=>true], 404);
         }
     }
 

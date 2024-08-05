@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
@@ -29,10 +30,10 @@ class ArticleController extends Controller
      */
     public function show(string $id)
     {
-        if (Article::find($id)){
-            return Article::find($id);
-        } else{
-            return response()->json(['message'=>'Artigo não encontrado.'], 404);
+        try {
+            return Article::findOrFail($id);
+        } catch (ModelNotFoundException $modelException) {
+            return response()->json(["error"=>true], 404);
         }
     }
 
