@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Dotenv\Exception\ValidationException;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\LoginRequest;
 
 use function Psy\debug;
 
@@ -35,7 +39,7 @@ class UserController extends Controller
         try {
             return User::findOrFail($id);
         } catch (ModelNotFoundException $modelException) {
-            return response()->json(["error"=>true], 404);
+            return response()->json(["error" => true], 404);
         }
     }
 
@@ -57,5 +61,20 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
         return response()->json(null, 204);
+    }
+
+    public function login(LoginRequest $request)
+    {
+        $request = $request->validated();
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            throw ([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
+        }
+
+        return $user->createToken($request->device_name)->plainTextToken;
     }
 }
