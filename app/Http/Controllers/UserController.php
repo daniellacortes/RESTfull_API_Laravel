@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Dotenv\Exception\ValidationException;
-use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\LoginRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 use function Psy\debug;
 
@@ -67,14 +68,23 @@ class UserController extends Controller
     {
         $request = $request->validated();
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request['email'])->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            throw ([
+        if (!$user || !Hash::check($request['password'], $user['password'])) {
+            throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
 
-        return $user->createToken($request->device_name)->plainTextToken;
+        $token = ['access_token' => $user->createToken('access_token')->plainTextToken];
+
+        return response()->json($token);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+        
+        return response()->json(['message' => 'Logout successful'], 202);
     }
 }

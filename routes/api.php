@@ -12,6 +12,11 @@ Route::post('/articles', [ArticleController::class, 'store']);
 Route::put('/articles/{id}', [ArticleController::class, 'update']);
 Route::delete('/articles/{id}', [ArticleController::class, 'destroy']);
 
+Route::get('/user/auth', function (Request $request) {
+    return $request->user();
+
+    })->middleware('auth:sanctum');
+
 Route::get('/user', [UserController::class, 'index']);
 Route::get('/user/{id}', [UserController::class, 'show']);
 Route::post('/user', [UserController::class, 'store']);
@@ -20,6 +25,5 @@ Route::delete('/user/{id}', [UserController::class, 'destroy']);
 
 Route::post('/user/login', [UserController::class, 'login']);
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
+
