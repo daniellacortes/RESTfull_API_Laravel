@@ -45,10 +45,10 @@ class RegisterTest extends TestCase
 
         $this->json('post', '/api/user')
             ->assertStatus(422)
-            ->assertJson([
+            ->assertJson(['errors' =>[
                 'name' => ['The name field is required.'],
                 'email' => ['The email field is required.'],
                 'password' => ['The password field is required.'],
-            ]);
+            ]]);
     }
 }
