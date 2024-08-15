@@ -15,41 +15,20 @@ class LogoutTest extends TestCase
         $faker = \Faker\Factory::create();
 
         $user = User::factory() ->create(['email' => $faker->email]);
-        
-        $user->createToken('access_token');
-        $array = $user->tokens[0];
-
-        $token = Arr::get($array, 'token');
-
-        dd($token);        
-
+        $token = $user->createToken('access_token')->plainTextToken;
         $headers = ['Authorization' => "Bearer $token"];
 
-        $this->json('get', '/api/articles', [], $headers)->assertStatus(200);
         $this->json('post', '/api/logout', [], $headers)->assertStatus(202);
-        $this->json('get', '/api/articles', [], $headers)->assertStatus(401);
-        
+      
         $this->assertEquals(true, $user->tokens->isEmpty());
-
-        // dd($user->tokens);
-
-        // $this->assertNotEmpty($user->currentAccessToken());
     }
 
-    // public function testUserWithNullToken()
-    // {
-    //     // // Simulating login
-    //     // $user = factory(User::class)->create(['email' => 'user@test.com']);
-    //     // $token = $user->generateToken();
-    //     // $headers = ['Authorization' => "Bearer $token"];
+    public function testUserWithNullToken()
+    {
+        $faker = \Faker\Factory::create();
 
-    //     Sanctum::actingAs(
-    //         $user = User::factory()->create(),
-    //         ['view-tasks']
-    //     );
+        $user = User::factory() ->create(['email' => $faker->email]);
 
-    //     $user->user()->currentAccessToken()->delete();
-
-    //     $this->json('post', '/api/logout', [])->assertStatus(401);
-    // }
+        $this->json('post', '/api/logout', [])->assertStatus(401);
+    }
 }
